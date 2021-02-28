@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+    torproxy:
+      build:
+        context: .
+        args:
+          UID: $UID
+          GID: $GID
+          APT_PROXY: $APT_PROXY
+      image: "gnzsnz/torproxy"
+      container_name: "torproxy"
+      hostname: "torproxy"
+      restart: "unless-stopped"
+      network_mode: "bridge"
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "5m"
+          max-file: "5"
+          compress: "true"
+      volumes:
+        - "tor_etc:/etc/tor"
+        - "tor_service:/var/lib/tor"
+      ports:
+        - 9050:9050
+
+volumes:
+  tor_etc:
+    name: tor_etc
+  tor_service:
+    name: tor_service
