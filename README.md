@@ -55,6 +55,27 @@ Or alternatevely with
 ```bash
 docker run -it gnzsnz/torproxy:latest torproxy
 ```
+### Test that is actually working
+
+`docker-compose ps` should show something like this. You are looking for State "healthy"
+
+```
+  Name                Command                 State               Ports
+--------------------------------------------------------------------------------
+torproxy   /usr/bin/tini -- /usr/bin/tor   Up (healthy)   0.0.0.0:9050->9050/tcp
+```
+To test a proxy connection you can run from the host or a computer that can connect to the proxy
+
+```bash
+# no tor proxy
+curl https://check.torproject.org/api/ip
+{"IsTor":false,"IP":"48.213.75.164"}
+
+# test tor proxy
+curl --socks5 127.0.0.1:9050 https://check.torproject.org/api/ip
+{"IsTor":true,"IP":"46.165.245.154"}
+
+```
 
 ## Setting up Tor <a name="setting-up-tor"></a>
 
