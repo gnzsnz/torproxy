@@ -131,7 +131,7 @@ Once you are connected to nyx you can control your tor client, configuration and
 
 * https://nyx.torproject.org/#configuration
 
-## Setting up nyx <a name="clean-up"></a>
+## Clean up <a name="clean-up"></a>
 
 To clean up everything
 
