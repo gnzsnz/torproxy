@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:jammy
 
 # docker build --build-arg APT_PROXY="http://apt-cacher:3142" -t gnzsnz/torproxy .
 ARG APT_PROXY
@@ -15,7 +15,7 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     ca-certificates apt-transport-https gpg gpg-agent wget tini\
     && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | apt-key add - \
-    && echo "deb [arch=amd64] https://deb.torproject.org/torproject.org focal main" | tee /etc/apt/sources.list.d/torproject.list \
+    && echo "deb [arch=amd64] https://deb.torproject.org/torproject.org jammy main" | tee /etc/apt/sources.list.d/torproject.list \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive  apt-get install --no-install-recommends -y \
     tor deb.torproject.org-keyring nyx \
