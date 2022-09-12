@@ -13,12 +13,6 @@ services:
       hostname: "torproxy"
       restart: "unless-stopped"
       network_mode: "bridge"
-      logging:
-        driver: "json-file"
-        options:
-          max-size: "5m"
-          max-file: "5"
-          compress: "true"
       volumes:
         - "tor_etc:/etc/tor"
         - "tor_service:/var/lib/tor"
