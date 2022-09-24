@@ -3,7 +3,7 @@
 ############ Project Specific #################
 .env
 env.*
-docker-compose.yml.*
+docker-compose.yml
 etc/torrc.*
 hidden_services/*.conf
 ###############################################

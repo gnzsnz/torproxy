@@ -32,7 +32,7 @@ GID=1000
 Run `docker-compose config` and check that everything looks good. To build the image using docker-compose you can do
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 Or with `docker build`
@@ -49,7 +49,7 @@ APT_PROXY will be used if it's set. If the argument is empty the container will 
 
 ## Run torproxy container <a name="run-torproxy-container"></a>
 
-Simplest way would be `docker-compose up`, you might modify the docker-compose.yml file provided.
+Simplest way would be `docker compose up`, you might modify the docker-compose.yml file provided.
 
 Or alternatevely with
 ```bash
@@ -57,7 +57,7 @@ docker run -it gnzsnz/torproxy:latest torproxy
 ```
 ### Test that is actually working
 
-`docker-compose ps` should show something like this. You are looking for State "healthy"
+`docker compose ps` should show something like this. You are looking for State "healthy"
 
 ```
   Name                Command                 State               Ports
@@ -123,7 +123,7 @@ Hidden service keys will be stored in volumen tor_service. You can import existi
 
 Nyx is setup in the torproxy docker container. A default config file is availabe in folder nyx. You can adjust it's values before build, or directly in the container. By default nyx will use cookie authentication.
 
-To run nyx you need to `docker exect -it torproxy nyx`
+To run nyx you need to `docker exec -it torproxy nyx`
 
 Once you are connected to nyx you can control your tor client, configuration and services.
 
@@ -136,5 +136,5 @@ Once you are connected to nyx you can control your tor client, configuration and
 To clean up everything
 
 ```bash
-docker-compose down --rmi all -v
+docker compose down --rmi all -v
 ```
