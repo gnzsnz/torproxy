@@ -5,10 +5,11 @@ services:
       build:
         context: .
         args:
-          UID: $UID
-          GID: $GID
-          APT_PROXY: $APT_PROXY
-      image: "gnzsnz/torproxy"
+          UID: ${UID}
+          GID: ${GID}
+          APT_PROXY: ${APT_PROXY}
+          BASE_VERSION: ${BASE_VERSION}
+      image: "gnzsnz/torproxy:${IMAGE_VERSION}"
       container_name: "torproxy"
       hostname: "torproxy"
       restart: "unless-stopped"
