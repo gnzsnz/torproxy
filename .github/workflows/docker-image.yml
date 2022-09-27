@@ -1,0 +1,51 @@
+name: torproxy Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Build and test torproxy
+    strategy:
+      matrix:
+        image_os: [focal, jammy]
+        runner_os: [20.04, 22.04]
+
+    runs-on: ubuntu-${{ matrix.runner_os}}
+    continue-on-error: true
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Get enviroment variables
+      run: |
+        grep -v '#' .env-dist | grep '=' > .env
+        while IFS= read -r line; do 
+          echo $line >> $GITHUB_ENV ; 
+        done < .env
+    
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile \
+        --build-arg UID=${{ env.UID }}  --build-arg GID=${{ env.GID }} \
+        --build-arg BASE_VERSION=${{ matrix.image_os }} \
+        --tag ${{ github.repository }}:${{ env.IMAGE_VERSION }}-${{ matrix.image_os }}
+
+    - name: Run container
+      run: |
+        docker run -d -p 9050:9050 \
+        --name torproxy \
+        ${{ github.repository }}:${{ env.IMAGE_VERSION }}-${{ matrix.image_os }}
+
+    - name: test tor proxy from runner
+      run: |
+        curl https://check.torproject.org/api/ip
+        curl -v --socks5 127.0.0.1:9050 \
+        https://check.torproject.org/api/ip && exit 0 || exit 1
+
+    - name: torproxy container log verification
+      run: |
+        docker logs -t aptcacher | grep "Bootstrapped 100%" && exit 0 || exit 1
