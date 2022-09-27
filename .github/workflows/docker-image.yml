@@ -48,4 +48,4 @@ jobs:
 
     - name: torproxy container log verification
       run: |
-        docker logs -t aptcacher | grep "Bootstrapped 100%" && exit 0 || exit 1
+        docker logs -t torproxy | grep "Bootstrapped 100%" && exit 0 || exit 1
