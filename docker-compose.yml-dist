@@ -13,7 +13,6 @@ services:
       container_name: "torproxy"
       hostname: "torproxy"
       restart: "unless-stopped"
-      network_mode: "bridge"
       volumes:
         - "tor_etc:/etc/tor"
         - "tor_service:/var/lib/tor"
