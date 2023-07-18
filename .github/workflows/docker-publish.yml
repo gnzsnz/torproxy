@@ -5,12 +5,12 @@ on:
     types: [published]
 
 env:
-  IMAGE_NAME: gnzsnz/bastion
+  IMAGE_NAME: gnzsnz/torproxy
   LATEST_TAG: jammy
 
 jobs:
   publish:
-    name: Build and test OpenSSH Bastion
+    name: Build and test
     strategy:
       matrix:
         image_os: [focal, jammy]
@@ -61,7 +61,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Bastion
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
