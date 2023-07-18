@@ -43,3 +43,9 @@ CMD ["/usr/bin/tor"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
 EXPOSE 9050
 VOLUME ["/etc/tor", "/var/lib/tor"]
+
+LABEL org.opencontainers.image.source=https://github.com/gnzsnz/torproxy.git
+LABEL org.opencontainers.image.url=https://hub.docker.com/r/gnzsnz/torproxy
+LABEL org.opencontainers.image.description="TOR proxy docker container"
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.version=${IMAGE_VERSION}-${BASE_VERSION}
