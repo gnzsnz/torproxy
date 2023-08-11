@@ -42,4 +42,3 @@ USER $USER
 CMD ["/usr/bin/tor"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
 EXPOSE 9050
-VOLUME ["/etc/tor", "/var/lib/tor"]
