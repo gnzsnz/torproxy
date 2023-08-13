@@ -70,6 +70,8 @@ jobs:
           build-args: |
             BASE_VERSION=${{ env.BASE_VERSION }}
             IMAGE_VERSION=${{ env.IMAGE_VERSION }}
+            UID=${{ env.UID }}
+            GID=${{ env.GID }}
           platforms: ${{ env.PLATFORMS }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
