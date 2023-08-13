@@ -42,6 +42,8 @@ jobs:
         build-args: |
           BASE_VERSION=${{ env.BASE_VERSION }}
           IMAGE_VERSION=${{ env.IMAGE_VERSION }}
+          UID=${{ env.UID }}
+          GID=${{ env.GID }}
         tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}-${{ matrix.image_os }}
 
     - name: Run container
