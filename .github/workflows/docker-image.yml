@@ -8,6 +8,7 @@ on:
 
 env:
   IMAGE_NAME: gnzsnz/torproxy
+  PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
   build:
@@ -33,7 +34,7 @@ jobs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
       with:
-        platforms: linux/amd64,linux/arm64
+        platforms: ${{ env.PLATFORMS }}
         
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -47,6 +48,7 @@ jobs:
         build-args: |
           BASE_VERSION=${{ env.BASE_VERSION }}
           IMAGE_VERSION=${{ env.IMAGE_VERSION }}
+        platforms: ${{ env.PLATFORMS }}
         tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}-${{ matrix.image_os }}
 
     - name: Run container
