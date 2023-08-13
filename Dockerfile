@@ -14,12 +14,14 @@ RUN if [ -n "$APT_PROXY" ]; then \
     ;fi \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-    ca-certificates apt-transport-https gpg gpg-agent wget tini\
-    && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | apt-key add - \
-    && echo "deb [arch=amd64] https://deb.torproject.org/torproject.org ${BASE_VERSION} main" | tee /etc/apt/sources.list.d/torproject.list \
+    ca-certificates apt-transport-https gpg wget tini\
+    && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org ${BASE_VERSION} main" | tee /etc/apt/sources.list.d/torproject.list \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive  apt-get install --no-install-recommends -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     tor deb.torproject.org-keyring nyx \
+    && apt-get purge -qy ca-certificates apt-transport-https gpg wget \
+    && apt-get autoremove -qy \
     && rm -rf /var/lib/apt/lists/* \
     && if [ -n "$UID" -a -n "$GID" ]; then \
       echo 'Setting UID:'$UID' and GID:'$GID \
