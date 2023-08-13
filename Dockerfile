@@ -20,7 +20,7 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     tor deb.torproject.org-keyring nyx \
-    && apt-get purge -qy ca-certificates apt-transport-https gpg wget \
+    && apt-get purge -qy apt-transport-https gpg wget \
     && apt-get autoremove -qy \
     && rm -rf /var/lib/apt/lists/* \
     && if [ -n "$UID" -a -n "$GID" ]; then \
