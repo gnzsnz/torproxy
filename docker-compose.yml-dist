@@ -4,6 +4,9 @@ services:
     torproxy:
       build:
         context: .
+        platforms:
+          - "linux/amd64"
+          - "linux/arm64"
         args:
           UID: ${UID}
           GID: ${GID}
