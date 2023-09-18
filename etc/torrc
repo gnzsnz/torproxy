@@ -1,0 +1,56 @@
+# gnzsnz/torproxy torrc file
+# References
+# https://github.com/torproject/tor/blob/master/src/config/torrc.sample.in
+# https://community.torproject.org/onion-services/
+RunAsDaemon 0
+
+## Look for OpenSSL hardware cryptographic support
+HardwareAccel 1
+# take care of your SDD
+AvoidDiskWrites 1
+
+SocksPort 0.0.0.0:9050
+
+# Resolve DNS through tor.
+# you will need need to map port 9053 in the container
+# DNSPort 9053
+# AutomapHostsOnResolve 1
+# AutomapHostsSuffixes .exit,.onion
+
+# Allow local network
+SOCKSPolicy accept 127.0.0.1/32
+SOCKSPolicy accept 192.168.1.0/16
+# Allow docker containers
+SOCKSPolicy accept 172.17.0.0/16
+## Some examples
+#SOCKSPolicy accept 172.18.0.0/16
+#SOCKSPolicy accept 172.19.0.0/16
+#SOCKSPolicy accept 172.20.0.0/16
+#SOCKSPolicy accept 172.21.0.0/16
+#SOCKSPolicy accept 10.0.0.0/8
+#SOCKSPolicy accept6 FC00::/7
+## Reject everything else
+SOCKSPolicy reject *
+
+# Auth
+ControlPort 9051
+CookieAuthentication 1
+CookieAuthFile /var/lib/tor/control_auth_cookie
+CookieAuthFileGroupReadable 1
+DataDirectoryGroupReadable 1
+
+# Log
+HeartbeatPeriod 1800
+Log notice stdout
+## To send all error messages to stderr:
+Log err stderr
+
+## Configuration options can be imported from files or folders using the %include
+## option with the value being a path. This path can have wildcards. Wildcards are
+## expanded first, using lexical order. Then, for each matching file or folder, the following
+## rules are followed: if the path is a file, the options from the file will be parsed as if
+## they were written where the %include option is. If the path is a folder, all files on that
+## folder will be parsed following lexical order. Files starting with a dot are ignored. Files
+## on subfolders are ignored.
+## The %include option can be used recursively.
+#%include /etc/tor/torrc.d/*.conf
