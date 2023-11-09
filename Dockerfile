@@ -13,6 +13,7 @@ RUN if [ -n "$APT_PROXY" ]; then \
       | tee /etc/apt/apt.conf.d/01proxy \
     ;fi \
     && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     ca-certificates apt-transport-https gpg wget tini\
     && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null \
