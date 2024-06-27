@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+    torproxy:
+      build:
+        context: .
+        platforms:
+          - "linux/amd64"
+          - "linux/arm64"
+        args:
+          UID: ${UID}
+          GID: ${GID}
+          APT_PROXY: ${APT_PROXY}
+          BASE_VERSION: ${BASE_VERSION}
+      image: "gnzsnz/torproxy:${IMAGE_VERSION}-${BASE_VERSION}"
+      container_name: "torproxy"
+      hostname: "torproxy"
+      restart: "unless-stopped"
+      volumes:
+        - "tor_etc:/etc/tor"
+        - "tor_service:/var/lib/tor"
+      ports:
+        - 9050:9050
+
+volumes:
+  tor_etc:
+    name: tor_etc
+  tor_service:
+    name: tor_service
