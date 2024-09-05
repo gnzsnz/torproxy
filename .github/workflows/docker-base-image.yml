@@ -7,7 +7,7 @@ on:
 
 env:
     IMAGE_NAME: gnzsnz/torproxy:latest
-    BASE_IMAGE: ubuntu:jammy
+    BASE_IMAGE: ubuntu:noble
     PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
@@ -40,7 +40,7 @@ jobs:
               while IFS= read -r line; do
                   echo $line >> $GITHUB_ENV ;
               done < .env
-              
+
           - name: Create issue
             id: create_issue
             env:
@@ -57,7 +57,7 @@ jobs:
                 gh issue create -t "$title" -b "$body"
                 echo "dup_issue=no" >> $GITHUB_OUTPUT
               fi
-              
+
           - name: Set up QEMU
             uses: docker/setup-qemu-action@v3
             if: ${{ steps.create_issue.outputs.dup_issue == 'no' }}
