@@ -1,5 +1,5 @@
 ARG BASE_VERSION
-FROM ubuntu:${BASE_VERSION:-latest}
+FROM ubuntu:${BASE_VERSION}
 
 ARG BASE_VERSION
 ARG APT_PROXY
@@ -8,6 +8,8 @@ ARG GID
 ARG USER=debian-tor
 ARG OLD_UID=101
 ARG OLD_GID=101
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
 RUN if [ -n "$APT_PROXY" ]; then \
       echo 'Acquire::http { Proxy "'$APT_PROXY'"; }'  \
       | tee /etc/apt/apt.conf.d/01proxy \
@@ -24,7 +26,10 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && apt-get purge -qy gpg wget \
     && apt-get autoremove -qy \
     && rm -rf /var/lib/apt/lists/* \
-    && if [ -n "$UID" -a -n "$GID" ]; then \
+    && if id ubuntu; then \
+    userdel -rf ubuntu \
+    ;fi \
+    && if [ -n "$UID" ] && [ -n "$GID" ]; then \
       echo 'Setting UID:'$UID' and GID:'$GID \
       && usermod -u $UID $USER \
       && groupmod -g $GID $USER \
