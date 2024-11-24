@@ -8,7 +8,7 @@ on:
 env:
     IMAGE_NAME: gnzsnz/torproxy:latest
     BASE_IMAGE: ubuntu:noble
-    PLATFORMS: linux/amd64,linux/arm64
+    PLATFORMS: linux/amd64
 
 jobs:
     check_base:
@@ -19,7 +19,7 @@ jobs:
 
           - name: Check if update available
             id: check
-            uses: lucacome/docker-image-update-checker@v1
+            uses: lucacome/docker-image-update-checker@v2
             with:
               base-image: ${{ env.BASE_IMAGE }}
               image: ${{ env.IMAGE_NAME }}
@@ -40,7 +40,7 @@ jobs:
               while IFS= read -r line; do
                   echo $line >> $GITHUB_ENV ;
               done < .env
-
+              
           - name: Create issue
             id: create_issue
             env:
@@ -57,7 +57,7 @@ jobs:
                 gh issue create -t "$title" -b "$body"
                 echo "dup_issue=no" >> $GITHUB_OUTPUT
               fi
-
+              
           - name: Set up QEMU
             uses: docker/setup-qemu-action@v3
             if: ${{ steps.create_issue.outputs.dup_issue == 'no' }}
