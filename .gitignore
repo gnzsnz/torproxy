@@ -5,7 +5,9 @@
 env.*
 docker-compose.yml
 etc/torrc.*
-hidden_services/*.conf
+hidden_service/*
+tor_data/*
+control_port/*
 ###############################################
 
 ### OSX ###

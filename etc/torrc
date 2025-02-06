@@ -9,8 +9,6 @@ HardwareAccel 1
 # take care of your SDD
 AvoidDiskWrites 1
 
-SocksPort 0.0.0.0:9050
-
 # Resolve DNS through tor.
 # you will need need to map port 9053 in the container
 # DNSPort 9053
@@ -19,23 +17,18 @@ SocksPort 0.0.0.0:9050
 
 # Allow local network
 SOCKSPolicy accept 127.0.0.1/32
-SOCKSPolicy accept 192.168.1.0/16
-# Allow docker containers
-SOCKSPolicy accept 172.17.0.0/16
-## Some examples
-#SOCKSPolicy accept 172.18.0.0/16
-#SOCKSPolicy accept 172.19.0.0/16
-#SOCKSPolicy accept 172.20.0.0/16
-#SOCKSPolicy accept 172.21.0.0/16
+SOCKSPolicy accept 192.168.0.0/16
+SOCKSPolicy accept 172.16.0.0/12
 #SOCKSPolicy accept 10.0.0.0/8
 #SOCKSPolicy accept6 FC00::/7
 ## Reject everything else
 SOCKSPolicy reject *
 
+SocksPort 0.0.0.0:9050
 # Auth
-ControlPort 9051
+ControlPort 0.0.0.0:9051
 CookieAuthentication 1
-CookieAuthFile /var/lib/tor/control_auth_cookie
+CookieAuthFile /run/tor/control_auth_cookie
 CookieAuthFileGroupReadable 1
 DataDirectoryGroupReadable 1
 
@@ -53,4 +46,4 @@ Log err stderr
 ## folder will be parsed following lexical order. Files starting with a dot are ignored. Files
 ## on subfolders are ignored.
 ## The %include option can be used recursively.
-#%include /etc/tor/torrc.d/*.conf
+%include /etc/tor/torrc.d/*.conf

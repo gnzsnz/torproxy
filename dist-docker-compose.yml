@@ -1,0 +1,23 @@
+
+services:
+  torproxy:
+    build:
+      context: .
+      platforms:
+        - "linux/amd64"
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        APT_PROXY: ${APT_PROXY}
+        BASE_VERSION: ${BASE_VERSION}
+    image: "gnzsnz/torproxy:${IMAGE_VERSION}-${BASE_VERSION}"
+    container_name: "torproxy"
+    hostname: "torproxy"
+    restart: "unless-stopped"
+    volumes:
+      - $PWD/etc:/etc/tor
+      #- $PWD/hidden_service:/var/lib/tor/hidden_service"
+      #- $PWD/control_port/:/run/tor
+    ports:
+      #- 127.0.0.1:9051:5051
+      - 127.0.0.1:9050:9050

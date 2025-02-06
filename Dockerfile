@@ -1,5 +1,5 @@
-ARG BASE_VERSION
-FROM ubuntu:${BASE_VERSION}
+ARG BASE_VERSION=noble
+FROM ubuntu:$BASE_VERSION
 
 ARG BASE_VERSION
 ARG APT_PROXY
@@ -29,6 +29,9 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && if id ubuntu; then \
     userdel -rf ubuntu \
     ;fi \
+    && mkdir /run/tor \
+    && chown -R $UID:$GID /run/tor \
+    && chmod -R 750 /run/tor \
     && if [ -n "$UID" ] && [ -n "$GID" ]; then \
       echo 'Setting UID:'$UID' and GID:'$GID \
       && usermod -u $UID $USER \
@@ -40,13 +43,17 @@ RUN if [ -n "$APT_PROXY" ]; then \
     ; fi
 
 COPY --chown=$USER:$USER etc/* /etc/tor/
-COPY --chown=$USER:$USER hidden_services/* /var/lib/tor/
 COPY --chown=$USER:$USER nyx/config /var/lib/tor/.nyx/
 
-HEALTHCHECK --interval=20s --timeout=15s --start-period=10s \
-            CMD tor-resolve -v google.com || exit 1
-
 USER $USER
+
+EXPOSE 9050 9051
+VOLUME /etc/tor
+VOLUME /var/lib/tor
+VOLUME /run/tor
+
 CMD ["/usr/bin/tor"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
-EXPOSE 9050
+
+HEALTHCHECK --interval=20s --timeout=15s --start-period=10s \
+    CMD tor-resolve -v google.com || exit 1
