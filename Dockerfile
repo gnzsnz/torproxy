@@ -3,8 +3,8 @@ FROM ubuntu:$BASE_VERSION
 
 ARG BASE_VERSION
 ARG APT_PROXY
-ARG UID
-ARG GID
+ARG UID=1000
+ARG GID=1000
 ARG USER=debian-tor
 ARG OLD_UID=101
 ARG OLD_GID=101
@@ -27,11 +27,8 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && apt-get autoremove -qy \
     && rm -rf /var/lib/apt/lists/* \
     && if id ubuntu; then \
-    userdel -rf ubuntu \
+      userdel -rf ubuntu \
     ;fi \
-    && mkdir /run/tor \
-    && chown -R $UID:$GID /run/tor \
-    && chmod -R 750 /run/tor \
     && if [ -n "$UID" ] && [ -n "$GID" ]; then \
       echo 'Setting UID:'$UID' and GID:'$GID \
       && usermod -u $UID $USER \
@@ -40,7 +37,11 @@ RUN if [ -n "$APT_PROXY" ]; then \
       && find /etc/tor/ -user $OLD_UID -exec chown -h debian-tor {} + \
       && find /var/lib/tor/ -group $OLD_GID -exec chgrp -h debian-tor {} + \
       && find /var/lib/tor/ -user $OLD_UID -exec chown -h debian-tor {} + \
-    ; fi
+    ; fi \
+    && mkdir /run/tor \
+    && chown -R $UID:$GID /run/tor \
+    && chmod -R 750 /run/tor
+
 
 COPY --chown=$USER:$USER etc/* /etc/tor/
 COPY --chown=$USER:$USER nyx/config /var/lib/tor/.nyx/
