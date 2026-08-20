@@ -1,4 +1,4 @@
-ARG BASE_VERSION=noble
+ARG BASE_VERSION=resolute
 FROM ubuntu:$BASE_VERSION
 
 ARG BASE_VERSION
@@ -8,6 +8,7 @@ ARG GID=1000
 ARG USER=debian-tor
 ARG OLD_UID=101
 ARG OLD_GID=101
+ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN if [ -n "$APT_PROXY" ]; then \
@@ -15,13 +16,13 @@ RUN if [ -n "$APT_PROXY" ]; then \
       | tee /etc/apt/apt.conf.d/01proxy \
     ;fi \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq \
-    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+    && apt-get upgrade -yq \
+    && apt-get install --no-install-recommends -y \
     ca-certificates apt-transport-https gpg wget tini\
-    && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg >/dev/null \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/tor-archive-keyring.gpg] https://deb.torproject.org/torproject.org ${BASE_VERSION} main" | tee /etc/apt/sources.list.d/torproject.list \
+    && wget -qO- https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --dearmor | tee /usr/share/keyrings/deb.torproject.org-keyring.gpg >/dev/null \
+    && echo -e "Types: deb deb-src\nURIs: https://deb.torproject.org/torproject.org/\nSuites: ${BASE_VERSION}\nComponents: main\nSigned-By: /usr/share/keyrings/deb.torproject.org-keyring.gpg" | tee /etc/apt/sources.list.d/tor.sources \
     && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+    && apt-get install --no-install-recommends -y \
     tor deb.torproject.org-keyring nyx \
     && apt-get purge -qy gpg wget \
     && apt-get autoremove -qy \
@@ -42,7 +43,6 @@ RUN if [ -n "$APT_PROXY" ]; then \
     && chown -R $UID:$GID /run/tor \
     && chmod -R 750 /run/tor
 
-
 COPY --chown=$USER:$USER etc/* /etc/tor/
 COPY --chown=$USER:$USER nyx/config /var/lib/tor/.nyx/
 
@@ -56,5 +56,5 @@ VOLUME /run/tor
 CMD ["/usr/bin/tor"]
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-HEALTHCHECK --interval=20s --timeout=15s --start-period=10s \
-    CMD tor-resolve -v google.com || exit 1
+# hadolint ignore=DL3025
+HEALTHCHECK --interval=20s --timeout=15s --start-period=10s CMD tor-resolve -v google.com || exit 1
