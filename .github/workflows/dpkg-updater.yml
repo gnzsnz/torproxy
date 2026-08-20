@@ -6,17 +6,17 @@ on:
   workflow_dispatch:
 
 env:
-  SEARCH_FOR: tor libssl3 deb.torproject.org-keyring nyx
+  SEARCH_FOR: tor libssl3t64 deb.torproject.org-keyring nyx
   SEARCH_TERM: 'Depends:\|Version:'
   IMAGE_NAME: ghcr.io/gnzsnz/torproxy
 
 jobs:
   checkupdate:
       name: Check for dpkg updates
-      runs-on: ubuntu-22.04
+      runs-on: ubuntu-latest
       strategy:
         matrix:
-          image_os: [noble, jammy]
+          image_os: [noble, resolute]
 
       steps:
         - name: Checkout
